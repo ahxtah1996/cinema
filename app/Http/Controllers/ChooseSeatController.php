@@ -11,8 +11,10 @@ use App\Models\Seat_col;
 use App\Models\Seat_row;
 
 use App\Models\Showtime;
-
+use Pusher\Pusher;
 use Session;
+use Auth;
+use LRedis;
 
 class ChooseSeatController extends Controller
 {
@@ -28,8 +30,8 @@ class ChooseSeatController extends Controller
         };
 
         return Seat_Row::with(['seatCols', 'room.showtimes' => $seatFilter])
-            ->whereHas('room.showtimes', $seatFilter)
-            ->get();
+        ->whereHas('room.showtimes', $seatFilter)
+        ->get();
     }
     public function index()
     {
@@ -55,6 +57,18 @@ class ChooseSeatController extends Controller
     public function store(Request $request)
     {
         $id = $request->showtime_id;
+
+        $seatSelected = [];
+        $allShowtime = $this->scanAllForMatch('showtimeByUser*');
+        foreach ($allShowtime as $key) {
+            $a = json_decode(LRedis::get($key));
+            if ($a[0] == $id && $a[1] != Auth::id()) {
+                foreach ($a[2] as $value) {
+                    array_push($seatSelected, $value);
+                }
+            }
+        }
+        $seatSelected = json_encode($seatSelected);
         $seatRow = $this->takeSeat($id);
         $seatCount = $this->takeSeat($id);
         $max = 0;
@@ -67,7 +81,29 @@ class ChooseSeatController extends Controller
         $seatCol = $this->getSeatPrice($id);
         session(['checkPayment' => true]);
 
-        return view('frontend.booking.choose-seat', compact('id', 'seatRow', 'seatCol', 'max'));
+        return view('frontend.booking.choose-seat', compact('id', 'seatRow', 'seatCol', 'max', 'seatSelected'));
+    }
+    //search redis by key
+    public function scanAllForMatch ($pattern, $cursor=null, $allResults=array()) {
+
+        // Zero means full iteration
+        if ($cursor==="0") {
+            return $allResults;
+        }
+
+        // No $cursor means init
+        if ($cursor===null) {
+            $cursor = "0";
+        }
+
+        // The call
+        $result = LRedis::scan($cursor, 'match', $pattern);
+
+        // Append results to array
+        $allResults = array_merge($allResults, $result[1]);
+
+        // Recursive call until cursor is 0
+        return $allResults;
     }
     private function getSeatPrice($id)
     {
@@ -82,11 +118,11 @@ class ChooseSeatController extends Controller
             $query->where('id', $showtime_id);
         };
         $seat = Seat_Row::with('seatCols')
-            ->with(['room.showtimes' => $stFilter])
-            ->whereHas('room.showtimes', $stFilter)
-            ->with(['seatType.seatPrices' => $seatFilter])
-            ->whereHas('seatType.seatPrices', $seatFilter)
-            ->get();
+        ->with(['room.showtimes' => $stFilter])
+        ->whereHas('room.showtimes', $stFilter)
+        ->with(['seatType.seatPrices' => $seatFilter])
+        ->whereHas('seatType.seatPrices', $seatFilter)
+        ->get();
 
         return $seat;
     }
@@ -134,5 +170,23 @@ class ChooseSeatController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function postSend(Request $request)
+    {
+        $options = [
+            'cluster' => 'ap1',
+            'useTLS' => true,
+        ];
+        $pusher = new Pusher(
+            'ce71fbaacd844a8dda04',
+            'e9cc9421710fce179d9c',
+            '792535',
+            $options
+        );
+        LRedis::set('showtimeByUser' . Auth::id(), json_encode([$request->showtime, Auth::id(), $request->seats]), 'EX', 600);
+        $data['seats'] = $request->seats;
+        $data['showtime'] = $request->showtime;
+        $data['user'] = Auth::id();
+        $pusher->trigger('queue', 'mess', $data);
     }
 }

@@ -50,11 +50,11 @@
                 </li>
             </ul>
         </nav>
-        <div class="control-panel abcd">
+        <div class="control-panel right40">
             <input type="search" name="search" id="searchNav" title="Search" class="typeahead" placeholder="Search">
         </div>
         <!-- Additional header buttons / Auth and direct link to booking-->
-        <div class="control-panel">
+        <div class="control-panel right5">
             <div class="col-md-8">
                 @guest
                     <!-- <div class="control-panel"> -->

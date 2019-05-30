@@ -6,6 +6,7 @@
     <!-- Mobile Specific Metas-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="telephone=no" name="format-detection">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Fonts -->
     <!-- Font awesome - icon font -->
     <link href="{{ asset('bower_components/font-awesome/css/font-awesome.css') }}" rel="stylesheet">

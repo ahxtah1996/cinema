@@ -40,3 +40,4 @@ Route::get('/search', 'SearchController@searchFullText')->name('search');
 Route::get('/redirect/{social}', 'SocialAuthController@redirect');
 Route::get('/callback/{social}', 'SocialAuthController@callback');
 Route::get('lang/{lang}', 'LangController@changeLang')->name('lang');
+Route::post('sendmess', 'ChooseSeatController@postSend');

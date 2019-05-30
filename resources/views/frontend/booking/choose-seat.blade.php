@@ -29,7 +29,7 @@
                                             {{ $dem = 0 }}
                                             @foreach ($data->tickets as $ticket)
                                                 @if ($ticket->showtime_id == $id)
-                                                    <span class="sits__place sits-price--cheap sits-state--not">Empty</span>
+                                                    <span class="sits__place sits-price--cheap sits-state--not" data-id="-999">Empty</span>
                                                 @else {{ $dem++ }}
                                                 @endif
                                                 @if ($dem == count($data->tickets))
@@ -73,9 +73,10 @@
     </section>
 </div>
 <div class="clearfix"></div>
+<input type="hidden" name="seatSelected" class="seatSelected" value="{{ $seatSelected }}">
 <form id='showtimeForm' method="POST" action="{{ route('payment.store') }}">
     @csrf
-    <input type="hidden" name="seatId[]" id="seatId">
+    <input type="hidden" name="seatId[]" id="seatId">   
     <input type="hidden" name="showtimeId" id="showtimeId" value="{{ $id }}">
     <input type="hidden" name="result" id="result">
     <div id="booking-next" class="booking-pagination">
@@ -94,6 +95,11 @@
 @stop
 @push('scripts')
 <script type="text/javascript">
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
     $('.sits__place').click(function () {
         //data element init
         var chooseTime = $(this).attr('data-time');
@@ -101,5 +107,46 @@
         $('.class-hide').show();
     });
     init_BookingTwo();
+</script>
+<script src="https://js.pusher.com/4.0/pusher.js"></script>
+<script type="text/javascript">
+    var a = jQuery.parseJSON($('.seatSelected').val());
+    $('.sits__place').each(function () {
+        var val = $(this).data('id');
+        var check = a.indexOf(val.toString());
+        if (check != -1) {
+            $(this).addClass('somebody-choseen');
+        } else {
+            $(this).removeClass('somebody-choseen');
+        }
+    })
+
+    $(document).ready(function (){
+
+        var pusher = new Pusher('ce71fbaacd844a8dda04', {
+            cluster: 'ap1',
+            forceTLS: true
+        });
+
+        var showtimeId = $('#showtimeId').val();
+        var channel = pusher.subscribe('queue');
+        channel.bind('mess', function(data) {
+            if (data.showtime == showtimeId) {
+                if ({{ Auth::id() }} != data.user) {
+                    if (data.seats != null) {
+                        $('.sits__place').each(function () {
+                            var val = $(this).data('id');
+                            var check = data.seats.indexOf(val.toString());
+                            if (check != -1) {
+                                $(this).addClass('somebody-choseen');
+                            } else {
+                                $(this).removeClass('somebody-choseen');
+                            }
+                        })
+                    } else $('.sits__place').removeClass('somebody-choseen');
+                }
+            }
+        });
+    })
 </script>
 @endpush

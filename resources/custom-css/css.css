@@ -140,3 +140,19 @@ div.play-btn:hover {
 .color-white {
     color: white;
 }
+.somebody-choseen:before {
+  background-color: red;
+}
+.sits .sits__row .somebody-choseen:hover {
+  text-indent: -9999px;
+  cursor: auto;
+}
+.sits .sits__row .somebody-choseen:hover:before {
+  background-color: red;
+}
+.right40 {
+    right: 40%;
+}
+.right5 {
+    right: 5%;
+}

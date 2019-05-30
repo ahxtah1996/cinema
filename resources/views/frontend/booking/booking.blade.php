@@ -71,5 +71,5 @@
 </form>
 @stop
 @push('scripts')
-    <script type="text/javascript" src="{{ asset('custom-js/booking.js') }}"></script>
+<script type="text/javascript" src="{{ asset('custom-js/booking.js') }}"></script>
 @endpush
