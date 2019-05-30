@@ -20,6 +20,7 @@ function getShowtimeOnTimeChange (route) {
     var date = $('.inputDate').val();
     var input = new Date(date + 'T17:00:00Z');
     var today = new Date;
+    var now = $('.getNow').val();
     if (input >= today) {
         $('.dateFilter').val(date);
         $.ajax({
@@ -43,7 +44,8 @@ function getShowtimeOnTimeChange (route) {
                             <ul class="col-sm-8 items-wrap">`;
                             $.each(cinema.rooms, function (key2, room) {
                                 $.each(room.showtimes, function (key3, showtime) {
-                                    html += `<li class='time-select__item selectShowtime' data-time='` + showtime.timestart.substr(11, 5) + `' data-id=` + showtime.id + ` onclick='myFun()'>` + showtime.timestart.substr(11, 5) + `</li>`;
+                                    if (now < showtime.timestart)
+                                        html += `<li class='time-select__item selectShowtime' data-time='` + showtime.timestart.substr(11, 5) + `' data-id=` + showtime.id + ` onclick='myFun()'>` + showtime.timestart.substr(11, 5) + `</li>`;
                                 });
                             });
                         html += `</ul></div>`;

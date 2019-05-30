@@ -47,7 +47,7 @@
                     <div class="card-body-icon">
                         <i class="fas fa-fw fa-ticket-alt"></i>
                     </div>
-                    <div class="mr-5">{{ __('label.chart_ticket', ['data' => $countMovie]) }}</div>
+                    <div class="mr-5">{{ __('label.chart_tickets', ['data' => $countMovie]) }}</div>
                 </div>
                 <a class="card-footer text-white clearfix small z-1" href="#">
                     <span class="float-left">{{ __('label.chart_detail') }}</span>

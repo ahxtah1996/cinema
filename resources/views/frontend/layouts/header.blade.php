@@ -28,7 +28,7 @@
                                     <a href='{{ route('movie-detail.show', ['id' => $data->id]) }}' class="gallery-item__image">
                                         <img class="resize-menu-movie" alt='' src="{{ asset(config('app.upload_cover') . $data->image) }}">
                                     </a>
-                                    <a>{{ $data->name }}</a>
+                                    <a class="text-overflow">{{ $data->name }}</a>
                                 </div>
                             @endforeach
                         </li>
@@ -39,7 +39,7 @@
                                     <a href='{{ route('movie-detail.show', ['id' => $data->id]) }}' class="gallery-item__image">
                                         <img class="resize-menu-movie" alt='' src="{{ asset(config('app.upload_cover') . $data->image) }}">
                                     </a>
-                                    <a>{{ $data->name }}</a>
+                                    <a class="text-overflow">{{ $data->name }}</a>
                                 </div>
                             @endforeach
                         </li>
@@ -55,12 +55,12 @@
         </div>
         <!-- Additional header buttons / Auth and direct link to booking-->
         <div class="control-panel right5">
-            <div class="col-md-8">
+            <div class="col-md-9">
                 @guest
                     <!-- <div class="control-panel"> -->
                     <a href="{{ route('login') }}" class="btn btn--sign">{{ __('label.login') }}</a>
                 @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="btn btn--sign">{{ __('Register') }}</a>
+                    <a href="{{ route('register') }}" class="btn btn--sign">{{ __('label.reg') }}</a>
                 @endif
                 @else
                     <!-- <div class="control-panel"> -->
@@ -87,7 +87,7 @@
                     </div> 
                 @endguest
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <a href="{{ route('booking.index') }}" class="btn btn-md btn--warning btn--book btn-control--home">{{ __('label.book') }}</a>
             </div>
         </div>

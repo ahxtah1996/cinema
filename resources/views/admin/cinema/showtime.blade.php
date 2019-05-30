@@ -70,6 +70,20 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="viewShowtime" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="choose-sits">   
+                <div class="col-sm-12 col-lg-offset-1">
+                <div class="sits-area hidden-xs">
+                    <div class="sits-anchor">screen</div>
+                    <div class="sits"></div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @stop
 @push('scripts')
 <script type="text/javascript">
@@ -111,6 +125,33 @@
             $('#room_id').val(data.room_id);
             $('#timestart_day').val(data.timestart.split(" ")[0]);
             $('#timestart_time').val(data.timestart.split(" ")[1]);
+        })
+    });
+    $('body').on('click', '.viewShowtime', function () {
+        var showtime_id = $(this).data('id');
+        $.get("{{ route('showtime.index') }}" + '/' + showtime_id, function (data) {
+            $('#viewShowtime').modal('show');
+            var html = '';
+            var arr = [];
+            $.each(data[0].tickets, function (k, v) {
+                arr.push(v.seat_col_id);
+            });
+            $.each(data[0].room.seat_rows, function (key, value) {
+                html = html + `<div class="sits__row">`;
+                $.each(value.seat_cols, function (key2, value2) {
+                    if (arr.indexOf(value2.id) != -1) {
+                        html = html + `<span class="sits__place sits-price--cheap sits-state--not">` + value2.seat_name + `</span>`;
+                    } else if (value.seat_type_id == 1) {
+                        html = html + `<span class="sits__place sits-price--cheap">` + value2.seat_name + `</span>`;
+                    } else if (value.seat_type_id == 2) {
+                        html = html + `<span class="sits__place sits-price--middle">` + value2.seat_name + `</span>`;
+                    } else if (value.seat_type_id == 3) {
+                        html = html + `<span class="sits__place sits-price--expensive">` + value2.seat_name + `</span>`;
+                    }
+                })
+                html = html + `</div>`;
+            })
+            $('.sits').html(html);
         })
     });
     $('#saveBtn').click(function (e) {

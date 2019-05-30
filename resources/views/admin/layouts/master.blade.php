@@ -15,6 +15,7 @@
     <link href="{{ asset('bower_components/admin_css/css/sb-admin.css') }}" rel="stylesheet">
     <!-- DataTables -->
     <link href="{{ asset('bower_components/dataTables.bootstrap4.min/index.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ asset('custom-css/admin.css') }}">
 </head>
 <body id="page-top">
     @include('admin.layouts.header')

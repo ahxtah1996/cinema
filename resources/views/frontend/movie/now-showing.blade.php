@@ -16,7 +16,7 @@
                     <div class="col-xs-6 col-sm-3 cinema-item">
                         <div class="cinema">
                             <a href='{{ route('movie-detail.show', ['id' => $data->id]) }}' class="cinema__images">
-                                <img alt='' src="{{ asset(config('app.image_url') . '406x600.jpg') }}">
+                                <img class="resize-cover" alt='' src="{{ asset(config('app.upload_cover') . $data->image) }}">
                                 <span class="cinema-rating">{{ __('label.rate', ['data' => round($data->votes->avg('point'), config('const.round'))]) }}</span>
                             </a>
                             <a class="cinema-title text-overflow">{{ $data->name }}</a>

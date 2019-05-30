@@ -18,7 +18,7 @@
             <a class="dropdown-item" href="{{ route('seat.index') }}">{{ __('Seat') }}</a>
             <a class="dropdown-item" href="{{ route('seat_type.index') }}">{{ __('Seat Type') }}</a>
             <a class="dropdown-item" href="{{ route('seat_price.index') }}">{{ __('Seat Price') }}</a>
-            <a class="dropdown-item" href="{{ route('movie.index') }}">{{ __('Moive') }}</a>
+            <a class="dropdown-item" href="{{ route('movie.index') }}">{{ __('Movie') }}</a>
             <a class="dropdown-item" href="{{ route('showtime.index') }}">{{ __('Showtime') }}</a>
             <a class="dropdown-item" href="{{ route('slide.index') }}">{{ __('Slide') }}</a>
         </div>

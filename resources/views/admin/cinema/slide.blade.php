@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 @section('content')
 <div class="container">
-    <a class="btn btn-success" href="javascript:void(0)" id="createNewSlide">{{ __('label.createNewSlide') }}</a><a id="mess"></a>
+    <a class="btn btn-success" href="javascript:void(0)" id="createNewSlide">{{ __('label.createSlide') }}</a><a id="mess"></a>
     <table class="table table-bordered data-table">
         <thead>
             <tr>
@@ -40,7 +40,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">{{ __('label.status') }}</label>
                         <div class="col-sm-12">
                             <select id="status" name="status">
                                 <option value="">{{ __('label.chooseStatus') }}</option>
@@ -50,7 +49,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="image" class="control-label">{{ __('label.coverImage') }}</label>
+                        <label for="image" class="control-label col-sm-5">{{ __('label.coverImage') }}</label>
                         <div class="col-sm-12">
                             <input type="file" class="form-control" id="image" name="image">
                         </div>
@@ -66,7 +65,7 @@
 </div>
 <input type="hidden" name="routeIndex" class="routeIndex" value="{{ route('slide.index') }}">
 <input type="hidden" name="routeStore" class="routeStore" value="{{ route('slide.store') }}">
-<input type="hidden" name="newSlide" class="newSlide" value="{{ __('label.createNewSlide') }}">
+<input type="hidden" name="newSlide" class="newSlide" value="{{ __('label.createSlide') }}">
 <input type="hidden" name="editSlide" class="editSlide" value="{{ __('label.editSlide') }}">
 <input type="hidden" name="confirmDel" class="confirmDel" value="{{ __('label.confirmDelete') }}">
 @stop

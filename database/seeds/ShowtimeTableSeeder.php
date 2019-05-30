@@ -11,6 +11,6 @@ class ShowtimeTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\Showtime::class, 25)->create();
+        factory(App\Models\Showtime::class, 1000)->create();
     }
 }

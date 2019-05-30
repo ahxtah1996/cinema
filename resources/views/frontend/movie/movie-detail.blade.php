@@ -5,6 +5,7 @@
 <input type="hidden" class="getRouteMovie" value="{{ route('movie-detail.store') }}">
 <input type="hidden" class="getRouteVote" value="{{ route('vote.index') }}">
 <input type="hidden" class="getRouteVoteStore" value="{{ route('vote.store') }}">
+<input type="hidden" class="getNow" value="{{ \Carbon\Carbon::now() }}">
 <section class="container">
     <div class="col-sm-12">
         <div class="movie">

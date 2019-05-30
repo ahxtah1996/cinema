@@ -8,6 +8,7 @@ return [
     'soon' => 'Sắp chiếu',
     'support' => 'HỖ TRỢ',
     'login' => 'Đăng nhập',
+    'reg' => 'Đăng ký',
     'dashboard' => 'Bảng điều khiển',
     'hi' => 'Xin chào :data',
     'search_for' => 'Tìm kiếm ...',

@@ -3,19 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
 use App\Models\Showtime;
-
 use App\Models\Movie;
-
 use App\Models\Room;
-
 use Yajra\Datatables\Datatables;
-
 use Illuminate\Support\Facades\Validator;
-
 use App\Http\Requests\ShowtimeRequest;
 
 class ShowtimeController extends Controller
@@ -34,6 +27,7 @@ class ShowtimeController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="edit btn btn-primary btn-sm editShowtime">' . __('label.edit') . '</a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="btn btn-primary btn-sm viewShowtime">' . __('label.view') . '</a>';
                     $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="btn btn-danger btn-sm deleteShowtime">' . __('label.delete') . '</a>';
 
                     return $btn;
@@ -86,7 +80,8 @@ class ShowtimeController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Showtime::whereId($id)->with('tickets', 'room.seatRows.seatCols')->get();
+        return response()->json($data);
     }
 
     /**
