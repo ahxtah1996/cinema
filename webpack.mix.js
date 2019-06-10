@@ -10,6 +10,7 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+
 mix.copy('node_modules/corejs-typeahead/dist/typeahead.bundle.min.js', 'public/typeahead');
 mix.copy('resources/custom-css', 'public/custom-css');
 mix.copy('resources/custom-js', 'public/custom-js');

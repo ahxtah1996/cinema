@@ -1,7 +1,7 @@
 $(document).ready(function () {
     var notFound = $('.notFound').val();
     var linkUploadCover = $('.linkUploadCover').val();
-    var routeMovieDetail = $('.routeMovie-detail').val();
+    var routeMovieDetail = $('.routeMovieDetail').val();
     var engine = new Bloodhound({
         remote: {
             url: '/search?q=%QUERY%',

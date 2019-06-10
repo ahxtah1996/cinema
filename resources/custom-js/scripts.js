@@ -71,7 +71,6 @@ $.get(routeVote + '/' + id, function (data) {
     $('.ng').html(' (' + data.ng + ')');
 });
 $('input.rating').on('change', function () {
-    console.log('aaaaaaaaaa');
     var point = $(this).val();
     $('.point').val(point);
     $.ajax({
