@@ -156,3 +156,16 @@ div.play-btn:hover {
 .right5 {
     right: 7%;
 }
+.list-group-item img {
+    width: 40px;
+    height: 40px;
+    float: left;
+    margin-right: 7px;
+    object-fit: cover;
+}
+.color-bl {
+    color: #FFFFFF;
+}
+.chooseMoive a {
+    min-height: 60px;
+}

@@ -206,4 +206,15 @@ return [
     'confirmCreatePass' => 'Bạn có muốn tạo mật khẩu đăng nhập với email này!',
     'successCreatePass' => 'Tạo mật khẩu đăng nhập ứng dụng thành công! (Mặc định: :data)',
     'error' => 'Lỗi',
+    //add new
+    'byMovie' => 'Theo phim',
+    'byCinema' => 'Theo rạp',
+    'selectCinema' => 'CHỌN RẠP',
+    'selectMovie' => 'CHỌN PHIM',
+    'selectSession' => 'CHỌN SUẤT',
+    'code' => 'Mã vé',
+    'ticketPur' => 'Số vé đã mua:',
+    'admin' => 'Quản trị',
+    'printfSuc' => 'In vé thành công!',
+    'printfErr' => 'Vé đã được in!',
 ];

@@ -24,6 +24,7 @@
     "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
-    "corejs-typeahead": "^1.2.1"
+    "corejs-typeahead": "^1.2.1",
+    "flag-icon-css": "^3.3.0"
   }
 }

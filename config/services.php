@@ -55,4 +55,9 @@ return [
         'client_secret' => env('GOOGLE_APP_SECRET'),
         'redirect' => env('GOOGLE_APP_CALLBACK_URL'),
     ],
+    'google' => [
+        'maps' => [
+            'api-key' => env('GOOGLE_MAPS_API_KEY'),
+        ],
+    ],
 ];

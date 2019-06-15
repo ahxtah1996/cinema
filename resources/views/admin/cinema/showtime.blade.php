@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <select id="movie_id" name="movie_id">
-                                <option value=''>{{ __('label.chooseSeatType') }}</option>
+                                <option value=''>{{ __('label.chooseMovie') }}</option>
                                 @foreach ($movies as $data)
                                     <option value="{{ $data->id }}">{{ $data->name }}</option>
                                 @endforeach
@@ -42,11 +42,18 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <select id="room_id" name="room_id">
-                                <option value=''>{{ __('label.chooseRoomType') }}</option>
-                                @foreach ($rooms as $data)
-                                    <option value="{{ $data->id }}">{{ $data->name }}</option>
+                            <select id="cinema_id" name="cinema_id">
+                                <option value=''>{{ __('label.chooseCinema') }}</option>
+                                @foreach ($cinemas as $cinema)
+                                    <option value="{{ $cinema->id }}">{{ $cinema->name }}</option>
                                 @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <select id="room_id" class="hideClass" name="room_id">
+                                <option value=''>{{ __('label.chooseRoom') }}</option>
                             </select>
                         </div>
                     </div>
@@ -96,6 +103,7 @@
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
+        order: [0, "desc"],
         ajax: "{{ route('showtime.index') }}",
         columns: [
             {data: 'id', name: 'id'},
@@ -118,13 +126,24 @@
         var showtime_id = $(this).data('id');
         $.get("{{ route('showtime.index') }}" + '/' + showtime_id + '/edit', function (data) {
             $('#modelHeading').html("{{ __('label.editShowtime') }}");
+            $('#cinema').val(data.room.cinema.id);
+            var room_id = data.room.id;
+            $.get("{{ route('seat.index') }}" + '/' + data.room.cinema.id, function (data) {
+                var html = `<option value=''>{{ __('label.chooseRoom') }}</option>`;
+                $.each(data, function (key, value) {
+                    html += `<option value="` + value.id + `">` + value.name + `</option>`;
+                });
+                $('#room_id').html(html);
+                $('#room_id').val(room_id);
+            })
+            $('#room_id').show();
             $('#saveBtn').val("edit-showtime");
-            $('#ajaxModel').modal('show');
             $('#showtime_id').val(data.id);
             $('#movie_id').val(data.movie_id);
             $('#room_id').val(data.room_id);
             $('#timestart_day').val(data.timestart.split(" ")[0]);
             $('#timestart_time').val(data.timestart.split(" ")[1]);
+            $('#ajaxModel').modal('show');
         })
     });
     $('body').on('click', '.viewShowtime', function () {
@@ -166,7 +185,8 @@
                 $('#roomTypeForm').trigger("reset");
                 $('#ajaxModel').modal('hide');
                 table.draw();
-                document.getElementById('mess').innerHTML = data.success;
+                swal("Saved!", data.success, "success");
+                $('#saveBtn').html('{{ __('label.saveChange') }}');
             },
             error: function(data) {
                 var x = JSON.parse(data.responseText);
@@ -180,22 +200,48 @@
     });
     $('body').on('click', '.deleteShowtime', function () {
         var showtime_id = $(this).data("id");
-        if (confirm("{{ __('label.confirmDelete') }}"))
-        {
-            $.ajax({
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this data!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
                 type: "DELETE",
                 url: "{{ route('showtime.store') }}" + '/' + showtime_id,
                 success: function (data) {
                     table.draw();
-                    document.getElementById('mess').innerHTML = data.success;
+                    swal(data.success, {
+                        icon: "success",
+                    });
                 },
                 error: function (data) {
                     console.log('Error:', data);
+                    swal("Error!", "Something went wrong!", "error");
                 }
             });
-        }
-        
+                
+            } else {
+                swal("Cancelled!");
+            }
+        });
     });    
+});
+$('#cinema_id').on('change', function() {
+    $('#room_id').show();
+    var cinema_id = this.value;
+    if (cinema_id > 0) {
+        $.get("{{ route('seat.index') }}" + '/' + cinema_id, function (data) {
+            var html = `<option value=''>{{ __('label.chooseRoom') }}</option>`;
+            $.each(data, function (key, value) {
+                html += `<option value="` + value.id + `">` + value.name + `</option>`;
+            });
+            $('#room_id').html(html);
+        })
+    } else $('#room_id').hide();
 });
 function printErrorMsg (msg) {
     $('.print-error-msg').find('ul').html('');

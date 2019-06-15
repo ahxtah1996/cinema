@@ -17,7 +17,7 @@
                     </div>
                     <div class="mr-5">{{ __('label.chart_user', ['data' => $countUser]) }}</div>
                 </div>
-                <a class="card-footer text-white clearfix small z-1" href="#">
+                <a class="card-footer text-white clearfix small z-1" href="{{ route('user.index') }}">
                     <span class="float-left">{{ __('label.chart_detail') }}</span>
                     <span class="float-right">
                         <i class="fas fa-angle-right"></i>
@@ -47,9 +47,9 @@
                     <div class="card-body-icon">
                         <i class="fas fa-fw fa-ticket-alt"></i>
                     </div>
-                    <div class="mr-5">{{ __('label.chart_tickets', ['data' => $countMovie]) }}</div>
+                    <div class="mr-5">{{ __('label.chart_tickets', ['data' => $countTicket]) }}</div>
                 </div>
-                <a class="card-footer text-white clearfix small z-1" href="#">
+                <a class="card-footer text-white clearfix small z-1" href="{{ route('ticket.index') }}">
                     <span class="float-left">{{ __('label.chart_detail') }}</span>
                     <span class="float-right">
                         <i class="fas fa-angle-right"></i>
@@ -65,7 +65,7 @@
                     </div>
                     <div class="mr-8">{{ __('label.chart_money', ['data' => number_format($totalMoney)]) }}</div>
                 </div>
-                <a class="card-footer text-white clearfix small z-1" href="#">
+                <a class="card-footer text-white clearfix small z-1" href="{{ route('adm-bill.index') }}">
                     <span class="float-left">{{ __('label.chart_detail') }}</span>
                     <span class="float-right">
                         <i class="fas fa-angle-right"></i>

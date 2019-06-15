@@ -31,7 +31,11 @@ class AdminHomeController extends Controller
         $countMovie = Movie::count();
         $countTicket = Ticket::count();
         $totalMoney = Bill::sum('total');
-        $movies = Movie::where('status', config('const.showing_movie_status'))->get();
+        $movies = Movie::where('status', config('const.showing_movie_status'))
+            ->with(['showtimes' => function ($query) {
+                $query->withCount('tickets');
+            }])
+            ->get();
         //Create array color.
         $rgbColor = [];
         $arrColor = [];
@@ -57,19 +61,14 @@ class AdminHomeController extends Controller
         $rating->labels($labels);
         $rating->dataset(__('label.chart_rate'), 'bar', $values)->backgroundcolor($arrColor);
         //dataset chart ticket & vote
-        $tickets = $movies;
-        foreach ($tickets as $key => $showtimes) {
-            foreach ($showtimes->showtimes as $value) {
-                $tickets[$key]->countTickets += count($value->tickets);
-            } 
+        // dd($votes);
+        foreach ($votes as $key => $showtimes) {
+            $votes[$key]->countVotes = count($showtimes->votes);
+            $votes[$key]->countTicket = collect($showtimes->showtimes->sum('tickets_count'))[0];
         }
-        $votes = $movies;
-        foreach ($votes as $key => $value) {
-            $votes[$key]->countVotes = count($value->votes);
-        }
-        $labels = $tickets->pluck('name');
+
         $values = $votes->pluck('countVotes');
-        $values2 = $tickets->pluck('countTickets');
+        $values2 = $votes->pluck('countTicket');
         $tav = new MovieChart();
         $tav->labels($labels);
         $tav->dataset(__('label.chart_vote'), 'bar', $values)->backgroundcolor($arrColor);

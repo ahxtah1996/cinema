@@ -9,8 +9,6 @@
             <div class="col-sm-3"><!--left col-->
                 <div class="text-center">
                     <img src="" class="avatar img-circle img-thumbnail">
-                    <h6>{{ __('label.upload_ava') }}</h6>
-                    <input type="file" class="text-center center-block file-upload">
                 </div>  
             </div><!--/col-3-->
             <div class="col-sm-9">

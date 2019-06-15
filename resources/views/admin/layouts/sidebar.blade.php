@@ -23,4 +23,29 @@
             <a class="dropdown-item" href="{{ route('slide.index') }}">{{ __('Slide') }}</a>
         </div>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('ticket.index') }}">
+            <i class="fas fa-fw fa-ticket-alt"></i>
+            <span>Tickets</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('adm-bill.index') }}">
+            <i class="fas fa-money-bill"></i>
+            <span>Bills</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('user.index') }}">
+            <i class="fas fa-users"></i>
+            <span>Members</span>
+        </a>
+    </li>
+    {{-- Map --}}
+    {{-- <li class="nav-item">
+        <a class="nav-link" href="{{ route('map.index') }}">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>Maps</span>
+        </a>
+    </li> --}}
 </ul>

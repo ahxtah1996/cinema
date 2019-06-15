@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('custom-css/admin.css') }}">
 </head>
 <body id="page-top">
+    @include('sweetalert::alert')
     @include('admin.layouts.header')
     <div id="wrapper">
     @include('admin.layouts.sidebar')
@@ -40,6 +41,7 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('bower_components/admin_css/vendor/jquery/jquery.min.js') }}"></script>
     <!-- Core plugin JavaScript-->

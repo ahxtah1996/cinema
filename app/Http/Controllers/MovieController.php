@@ -46,7 +46,7 @@ class MovieController extends Controller
         $id = $request->idFilter;
         $date = $request->dateFilter;
         $movieFilter = function ($query) use ($id, $date) {
-            $query->where('movie_id', $id)->where('timestart', 'like', $date . '%');
+            $query->where('movie_id', $id)->where('timestart', 'like', $date . '%')->orderBy('timestart');
         };
         $cinema = Cinema::with(['rooms.showtimes' => $movieFilter])
             ->whereHas('rooms.showtimes', $movieFilter)
@@ -70,7 +70,7 @@ class MovieController extends Controller
             $vote = $v->point;   
         }
         $movieFilter = function ($query) use ($id) {
-            $query->where('movie_id', $id);
+            $query->where('movie_id', $id)->orderBy('timestart');
         };
         $cinema = Cinema::with(['rooms.showtimes' => $movieFilter])
             ->whereHas('rooms.showtimes', $movieFilter)

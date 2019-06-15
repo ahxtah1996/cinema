@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Showtime;
 use App\Models\Movie;
 use App\Models\Room;
+use App\Models\Cinema;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ShowtimeRequest;
@@ -26,9 +27,9 @@ class ShowtimeController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="edit btn btn-primary btn-sm editShowtime">' . __('label.edit') . '</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="btn btn-primary btn-sm viewShowtime">' . __('label.view') . '</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="btn btn-danger btn-sm deleteShowtime">' . __('label.delete') . '</a>';
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="edit btn btn-primary btn-sm editShowtime"><i class="fas fa-edit"></i></a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="btn btn-info btn-sm viewShowtime"><i class="fas fa-eye"></i></a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="btn btn-danger btn-sm deleteShowtime"><i class="fas fa-trash-alt"></i></a>';
 
                     return $btn;
                 })
@@ -36,9 +37,9 @@ class ShowtimeController extends Controller
                 ->make(true);
         }
         $movies = Movie::all();
-        $rooms = Room::all();
+        $cinemas = Cinema::all();
 
-        return view('admin.cinema.showtime', compact('movies', 'rooms'));
+        return view('admin.cinema.showtime', compact('movies', 'cinemas'));
     }
 
     /**
@@ -92,7 +93,7 @@ class ShowtimeController extends Controller
      */
     public function edit($id)
     {
-        $data = Showtime::findOrFail($id);
+        $data = Showtime::whereId($id)->with('room.cinema')->first();
 
         return response()->json($data);
     }

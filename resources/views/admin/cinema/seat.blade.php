@@ -97,13 +97,20 @@
             <div class="modal-body">
                 <form id="seatRowForm" name="seatRowForm" class="form-horizontal">
                     <input type="hidden" name="id" id="id">
+                    <div class="form-group"> 
+                        <div class="col-sm-12">
+                            <select id="cinema_id" name="cinema_id">
+                                <option value=''>{{ __('label.chooseCinema') }}</option>
+                                @foreach ($cinemas as $cinema)
+                                    <option value="{{ $cinema->id }}">{{ $cinema->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <select id="room_id" name="room_id">
+                            <select id="room_id" class="hideClass" name="room_id">
                                 <option value=''>{{ __('label.chooseRoom') }}</option>
-                                @foreach ($room as $data)
-                                    <option value="{{ $data->id }}">{{ $data->name }}</option>
-                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -144,6 +151,7 @@
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
+        order: [0, "desc"],
         ajax: "{{ route('seat.index') }}",
         columns: [
             {data: 'id', name: 'id'},
@@ -159,6 +167,7 @@
         $('#id').val('');
         $('#seatRowForm').trigger("reset");
         $('#modelHeading').html("{{ __('label.createSeatRow') }}");
+        $('#room_id').hide();
         $('#ajaxModel').modal('show');
     });
     $('body').on('click', '.editSeatRow', function () {
@@ -166,12 +175,22 @@
         $.get("{{ route('seat.index') }}" + '/' + id + '/edit', function (data) {
             $('#modelHeading').html("{{ __('label.editSeatname') }}");
             $('#saveBtn').val("edit-room");
-            $('#ajaxModel').modal('show');
             $('#id').val(id);
-            $('#room_id').val(data.room_id);
+            $('#cinema_id').val(data.room.cinema.id)
+            var room_id = data.room.id;
+            $.get("{{ route('seat.index') }}" + '/' + data.room.cinema.id, function (data) {
+                var html = `<option value=''>{{ __('label.chooseRoom') }}</option>`;
+                $.each(data, function (key, value) {
+                    html += `<option value="` + value.id + `">` + value.name + `</option>`;
+                });
+                $('#room_id').html(html);
+                $('#room_id').val(room_id);
+            })
+            $('#room_id').show();
             $('#seat_type_id').val(data.seat_type_id);
             $('#row_name').val(data.row_name);
             $('#seat_cols').val(data.seat_cols);
+            $('#ajaxModel').modal('show');
         })
     });
     $('body').on('click', '.addSeatCol', function () {
@@ -196,6 +215,13 @@
             $('#updated_at').val(data.updated_at);
         })
     });
+    $('body').on('click', '.addSeatRow', function () {
+        var seat_col_id = $(this).data('id');
+        $.get("{{ route('seat_col.index') }}" + '/' + seat_col_id, function (data) {
+            swal("Saved!", data.success, "success");
+            table.draw();
+        });
+    })
     $('#addBtn').click(function (e) {
         e.preventDefault();
         $(this).html('{{ __('label.sending') }}');
@@ -208,7 +234,7 @@
                 $('#seatColForm').trigger("reset");
                 $('#ajaxSeat').modal('hide');
                 table.draw();
-                document.getElementById('mess').innerHTML = data.success;
+                swal("Saved!", data.success, "success");
                 $('#addBtn').html('{{ __('label.saveChange') }}');
             },
             error: function(data) {
@@ -231,7 +257,7 @@
                 success: function (data) {
                     $('#ajaxSeatCol').modal('hide');
                     table.draw();
-                    document.getElementById('mess').innerHTML = data.success;
+                    swal("Done!", data.success, "success");
                     $('.deleteSeatCol').html('{{ __('label.delete') }}');
                 },
                 error: function (data) {
@@ -253,7 +279,7 @@
                 $('#seatRowForm').trigger("reset");
                 $('#ajaxModel').modal('hide');
                 table.draw();
-                document.getElementById('mess').innerHTML = data.success;
+                swal("Saved!", data.success, "success");
                 $('#saveBtn').html('{{ __('label.saveChange') }}');
             },
             error: function(data) {
@@ -268,22 +294,48 @@
     });
     $('body').on('click', '.deleteSeatRow', function () {
         var id = $(this).data("id");
-        if (confirm("{{ __('label.confirmDelete') }}"))
-        {
-            $.ajax({
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this data!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
                 type: "DELETE",
                 url: "{{ route('seat.store') }}" + '/' + id,
                 success: function (data) {
                     table.draw();
-                    document.getElementById('mess').innerHTML = data.success;
+                    swal(data.success, {
+                        icon: "success",
+                    });
                 },
                 error: function (data) {
                     console.log('Error:', data);
+                    swal("Error!", "Something went wrong!", "error");
                 }
             });
-        }
-        
+                
+            } else {
+                swal("Cancelled!");
+            }
+        });
     });    
+});
+$('#cinema_id').on('change', function() {
+    $('#room_id').show();
+    var cinema_id = this.value;
+    if (cinema_id > 0) {
+        $.get("{{ route('seat.index') }}" + '/' + cinema_id, function (data) {
+            var html = `<option value=''>{{ __('label.chooseRoom') }}</option>`;
+            $.each(data, function (key, value) {
+                html += `<option value="` + value.id + `">` + value.name + `</option>`;
+            });
+            $('#room_id').html(html);
+        })
+    } else $('#room_id').hide();
 });
 function printErrorMsg (msg) {
     $('.print-error-msg').find('ul').html('');

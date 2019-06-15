@@ -39,7 +39,7 @@ function getShowtimeOnTimeChange (route) {
                     $.each( data, function (key, cinema) {
                         html += `<div class="time-select__group">
                             <div class="col-sm-4">
-                                <p class="time-select__place">` + cinema.name + `</p>
+                                <p class="time-select__place color-bl">` + cinema.name + `</p>
                             </div>
                             <ul class="col-sm-8 items-wrap">`;
                             $.each(cinema.rooms, function (key2, room) {

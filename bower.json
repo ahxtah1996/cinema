@@ -41,6 +41,7 @@
     "jquery.fancybox.min.css": "https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css",
     "jquery.fancybox.min": "https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js",
     "chart": "https://cdn.jsdelivr.net/npm/chart.js",
-    "bootstrap-rating": "^1.5.0"
+    "bootstrap-rating": "^1.5.0",
+    "flag-icon-css": "^3.3.0"
   }
 }

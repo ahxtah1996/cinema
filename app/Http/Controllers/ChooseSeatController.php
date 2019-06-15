@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Room;
-
 use App\Models\Seat_col;
-
 use App\Models\Seat_row;
-
 use App\Models\Showtime;
+
 use Pusher\Pusher;
 use Session;
 use Auth;
@@ -31,6 +29,7 @@ class ChooseSeatController extends Controller
 
         return Seat_Row::with(['seatCols', 'room.showtimes' => $seatFilter])
         ->whereHas('room.showtimes', $seatFilter)
+        ->withCount('seatCols')
         ->get();
     }
     public function index()
@@ -70,15 +69,17 @@ class ChooseSeatController extends Controller
         }
         $seatSelected = json_encode($seatSelected);
         $seatRow = $this->takeSeat($id);
-        $seatCount = $this->takeSeat($id);
-        $max = 0;
-        foreach ($seatCount as $seat)
-        {
-            if ($seat->seatCols->count() > $max) {
-                $max = $seat->seatCols->count();
-            }
-        }
+        $max = $seatRow[0]->seat_cols_count;
+        // $seatCount = $this->takeSeat($id);
+        // $max = 0;
+        // foreach ($seatCount as $seat)
+        // {
+        //     if ($seat->seatCols->count() > $max) {
+        //         $max = $seat->seatCols->count();
+        //     }
+        // }
         $seatCol = $this->getSeatPrice($id);
+        // dd($seatCol[0]);
         session(['checkPayment' => true]);
 
         return view('frontend.booking.choose-seat', compact('id', 'seatRow', 'seatCol', 'max', 'seatSelected'));
@@ -110,19 +111,24 @@ class ChooseSeatController extends Controller
         $showtime = Showtime::findOrFail($id);
         $roomTypeId = $showtime->room->roomType->id;
         $showtime_id = $showtime->id;
-        $roomId = Showtime::findOrFail($id)->room->id;
+        $roomId = $showtime->room->id;
+        //Filter
         $seatFilter = function ($query) use ($roomTypeId) {
             $query->where('room_type_id', $roomTypeId);
         };
         $stFilter = function ($query) use ($showtime_id) {
             $query->where('id', $showtime_id);
         };
-        $seat = Seat_Row::with('seatCols')
-        ->with(['room.showtimes' => $stFilter])
-        ->whereHas('room.showtimes', $stFilter)
-        ->with(['seatType.seatPrices' => $seatFilter])
-        ->whereHas('seatType.seatPrices', $seatFilter)
-        ->get();
+        $seat = Seat_Row::with(['room.showtimes' => $stFilter])
+            ->whereHas('room.showtimes', $stFilter)
+            ->with(['seatType.seatPrices' => $seatFilter])
+            ->whereHas('seatType.seatPrices', $seatFilter)
+            ->with(['seatCols' => function ($query) use ($id) {
+                $query->withCount(['tickets' => function ($query) use ($id) {
+                    $query->where('showtime_id', $id);
+                }]);
+            }])
+            ->get();
 
         return $seat;
     }

@@ -34,10 +34,15 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admi
     Route::resource('seat_col', 'SeatColController');
     Route::resource('movie', 'MovieController');
     Route::resource('showtime', 'ShowtimeController');
+    Route::resource('ticket', 'TicketController');
     Route::resource('slide', 'SlideController');
+    Route::resource('adm-bill', 'AdminBillController');
+    Route::resource('user', 'UserController');
 });
 Route::get('/search', 'SearchController@searchFullText')->name('search');
 Route::get('/redirect/{social}', 'SocialAuthController@redirect');
 Route::get('/callback/{social}', 'SocialAuthController@callback');
 Route::get('lang/{lang}', 'LangController@changeLang')->name('lang');
 Route::post('sendmess', 'ChooseSeatController@postSend');
+Route::resource('pdf','pdfController');
+Route::resource('map', 'MapController');

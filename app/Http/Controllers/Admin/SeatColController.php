@@ -69,7 +69,28 @@ class SeatColController extends Controller
      */
     public function show($id)
     {
-        //
+        $seatOld = Seat_row::whereId($id)->withCount('seatCols')->firstOrFail();
+        $sl = $seatOld->seat_cols_count;
+        $row_name = chr(ord($seatOld->row_name)+1);
+
+        Seat_row::create([
+            'room_id' => $seatOld->room_id,
+            'seat_type_id' => $seatOld->seat_type_id,
+            'row_name' => $row_name,
+        ]);
+
+        $seat = Seat_row::findOrFail(Seat_row::latest()->first()->id);
+        $dem = $seat->seatCols->count('seatCols')+1;
+        for ($i = $dem; $i < $dem+  $sl; $i++) { 
+           Seat_col::create(
+            [
+                'seat_row_id' => $seat->id,
+                'seat_name' => $seat->row_name.$i,
+                'status' => '0',
+            ]);
+        };
+
+        return response()->json(['success' => __('label.seatRowSave')]);
     }
 
     /**

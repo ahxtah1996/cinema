@@ -3,21 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 
 use App\Models\Seat_row;
-
 use App\Models\Seat_col;
-
 use App\Models\Room;
-
+use App\Models\Cinema;
 use App\Models\Seat_type;
 
 use Yajra\Datatables\Datatables;
-
 use Illuminate\Support\Facades\Validator;
-
 use App\Http\Requests\SeatRequest;
 
 class SeatController extends Controller
@@ -43,18 +38,19 @@ class SeatController extends Controller
                     return $btn . '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-row_name="' . $row->row_name . '" class="btn btn-outline-info btn-sm addSeatCol">+</a>';
                 })
                 ->addColumn('action', function($row) {
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="edit btn btn-primary btn-sm editSeatRow">' . __('label.edit') . '</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="btn btn-danger btn-sm deleteSeatRow">' . __('label.delete') . '</a>';
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="edit btn btn-info btn-sm addSeatRow"><i class="fas fa-plus-circle"></i></a>';
+                    $btn = $btn .'<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="edit btn btn-primary btn-sm editSeatRow"><i class="fas fa-edit"></i></a>';
+                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" class="btn btn-danger btn-sm deleteSeatRow"><i class="fas fa-trash-alt"></i></a>';
                     
                     return $btn;
                 })  
                 ->rawColumns(['seat_cols', 'action'])
                 ->make(true);
         }
-        $room = Room::all();
+        $cinemas = Cinema::all();
         $seat_type = Seat_type::all();
 
-        return view('admin.cinema.seat', compact('seat_type', 'room'));
+        return view('admin.cinema.seat', compact('seat_type', 'room', 'cinemas'));
     }
 
     /**
@@ -96,7 +92,9 @@ class SeatController extends Controller
      */
     public function show($id)
     {
-        //
+        $rooms = Room::where('cinema_id', $id)->get();
+
+        return response()->json($rooms);
     }
 
     /**
@@ -107,7 +105,7 @@ class SeatController extends Controller
      */
     public function edit($id)
     {
-        $data = Seat_row::findOrFail($id);
+        $data = Seat_row::whereId($id)->with('room.cinema')->first();
 
         return response()->json($data);
     }

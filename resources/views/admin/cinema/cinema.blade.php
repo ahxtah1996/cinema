@@ -69,6 +69,7 @@
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
+        order: [0, "desc"],
         ajax: "{{ route('cinema.index') }}",
         columns: [
             {data: 'id', name: 'id'},
@@ -111,7 +112,8 @@
                 $('#roomTypeForm').trigger("reset");
                 $('#ajaxModel').modal('hide');
                 table.draw();
-                document.getElementById('mess').innerHTML = data.success;
+                swal("Saved!", data.success, "success");
+                $('#saveBtn').html('{{ __('label.saveChange') }}');
             },
             error: function(data) {
                 var x = JSON.parse(data.responseText);
@@ -125,20 +127,34 @@
     });
     $('body').on('click', '.deleteCinema', function () {
         var cinema_id = $(this).data("id");
-        if (confirm("{{ __('label.confirmDelete') }}"))
-        {
-            $.ajax({
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this data!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
                 type: "DELETE",
                 url: "{{ route('cinema.store') }}" + '/' + cinema_id,
                 success: function (data) {
                     table.draw();
-                    document.getElementById('mess').innerHTML = data.success;
+                    swal(data.success, {
+                        icon: "success",
+                    });
                 },
                 error: function (data) {
                     console.log('Error:', data);
+                    swal("Error!", "Something went wrong!", "error");
                 }
             });
-        }
+                
+            } else {
+                swal("Cancelled!");
+            }
+        });
     });    
 });
 function printErrorMsg (msg) {

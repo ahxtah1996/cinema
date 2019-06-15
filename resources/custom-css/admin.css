@@ -336,3 +336,16 @@
     left: 40px;
   }
 }
+$red: #e84c3d;
+$grey: #ecedef;
+$black: #343434;
+
+.cardWrap {
+  width: 27em;
+  margin: 3em auto;
+  color: #fff;
+  font-family: sans-serif;
+}
+.hideClass {
+  display: none;
+}
