@@ -58,7 +58,7 @@
                         <div class="form-group col-sm">
                             <label for="country" class="col-sm-2 control-label">{{ __('label.country') }}</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="country" name="country" placeholder="{{ __('label.enterName') }}" value="">
+                                <input type="text" class="form-control" id="country" name="country" placeholder="{{ __('label.enterCountry') }}" value="">
                             </div>
                         </div>
                     </div>
@@ -66,26 +66,26 @@
                         <div class="form-group col-sm">
                             <label for="director" class="col-sm-2 control-label">{{ __('label.director') }}</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="director" name="director" placeholder="{{ __('label.enterName') }}" value="">
+                                <input type="text" class="form-control" id="director" name="director" placeholder="{{ __('label.enterDirector') }}" value="">
                             </div>
                         </div>
                         <div class="form-group col-sm">
                             <label for="type" class="col-sm-2 control-label">{{ __('label.type') }}</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="type" name="type" placeholder="{{ __('label.enterName') }}" value="">
+                                <input type="text" class="form-control" id="type" name="type" placeholder="{{ __('label.enterType') }}" value="">
                             </div>
                         </div>
                         <div class="form-group col-sm">
                             <label for="producer" class="col-sm-2 control-label">{{ __('label.product') }}</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="producer" name="producer" placeholder="{{ __('label.enterName') }}" value="">
+                                <input type="text" class="form-control" id="producer" name="producer" placeholder="{{ __('label.enterProduct') }}" value="">
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="actor" class="col-sm-2 control-label">{{ __('label.actor') }}</label>
                         <div class="col-sm-12">
-                            <input type="text" class="form-control" id="actor" name="actor" placeholder="{{ __('label.enterName') }}" value="">
+                            <input type="text" class="form-control" id="actor" name="actor" placeholder="{{ __('label.enterActor') }}" value="">
                         </div>
                     </div>
                     <div class="row col-sm-12">
@@ -104,7 +104,7 @@
                         <div class="form-group col-sm">
                             <label for="trailer" class="control-label">{{ __('label.trailer') }}</label>
                             <div class="col-sm-12">
-                                <input type="text" class="form-control" id="trailer" name="trailer">
+                                <input type="text" class="form-control" id="trailer" name="trailer" placeholder="{{ __('label.enterTrailer') }}">
                             </div>
                         </div>
                     </div>
@@ -183,7 +183,7 @@
     $('body').on('click', '.editMovie', function () {
         var movie_id = $(this).data('id');
         $.get("{{ route('movie.index') }}" + '/' + movie_id + '/edit', function (data) {
-            $('#modelHeading').html("{{ __('label.editCinema') }}");
+            $('#modelHeading').html("{{ __('label.editMovie') }}");
             $('#saveBtn').val("edit-user");
             $('#movieForm').trigger("reset");
             $('#ajaxModel').modal('show');

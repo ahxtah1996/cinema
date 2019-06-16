@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 
 use App\Models\Movie;
 
 use App\Http\Requests\MovieRequest;
-
 use Yajra\Datatables\Datatables;
-
 use Illuminate\Support\Facades\Validator;
+use Cache;
 
 class MovieController extends Controller
 {
@@ -82,6 +80,9 @@ class MovieController extends Controller
         [
             'id' => $request->movie_id,
         ], $query);
+        Cache::forget('newHead');
+        Cache::forget('soonHead');
+        Cache::forget('movie' . $request->movie_id);
 
         return response()->json(['success' => __('label.movieSave')]);
     }

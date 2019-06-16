@@ -6,6 +6,8 @@ use Illuminate\View\View;
 
 use App\Models\Movie;
 
+use Cache;
+
 class MenuComposer
 {
     /**
@@ -34,8 +36,19 @@ class MenuComposer
     }
     public function compose(View $view)
     {
-        $new = $this->movie()->where('status', 1)->get();
-        $soon = $this->movie()->where('status', 2)->get();
+        if (Cache::has('newHead')) {
+            $new = Cache::get('newHead');
+        } else {
+            $new = $this->movie()->where('status', 1)->get();
+            Cache::put('newHead', $new);
+        }
+        if (Cache::has('soonHead')) {
+            $soon = Cache::get('soonHead');
+        } else {
+            $soon = $this->movie()->where('status', 2)->get();
+            Cache::put('soonHead', $soon);
+        }
+        
         $view->with('new', $new);
         $view->with('soon', $soon);
     }

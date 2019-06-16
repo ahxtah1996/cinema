@@ -82,6 +82,7 @@ class ShowtimeController extends Controller
     public function show($id)
     {
         $data = Showtime::whereId($id)->with('tickets', 'room.seatRows.seatCols')->get();
+        
         return response()->json($data);
     }
 

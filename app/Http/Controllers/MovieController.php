@@ -12,6 +12,7 @@ use App\Models\Vote;
 use Auth;
 
 use DB;
+use Cache;
 
 class MovieController extends Controller
 {
@@ -51,7 +52,7 @@ class MovieController extends Controller
         $cinema = Cinema::with(['rooms.showtimes' => $movieFilter])
             ->whereHas('rooms.showtimes', $movieFilter)
             ->get();
-
+        
         return response()->json($cinema);
     }
 
@@ -63,7 +64,13 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        $movie = Movie::findOrFail($id);
+        if(Cache::has('movie' . $id)) {
+            $movie = Cache::get('movie' . $id);
+        } else {
+            $movie = Movie::findOrFail($id);
+            Cache::set('movie' . $id, $movie);
+        }
+
         $v = Vote::where('movie_id', $id)->where('user_id', Auth::id())->first();
         $vote = 0;
         if ($v != null) {

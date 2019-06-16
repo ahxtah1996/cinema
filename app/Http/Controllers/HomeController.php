@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Movie;
-
 use App\Models\Vote;
-
 use App\Models\Slide;
 
 use DB;
+use Cache;
 
 class HomeController extends Controller
 {
@@ -26,12 +25,23 @@ class HomeController extends Controller
             $m[$key]['point'] = $data->votes->avg('point');
         }        
         $best = $m->sortByDesc('point')->take(config('const.best_movie'));
-        $new = Movie::where('status', config('const.showing_movie_status'))
-            ->with('votes')
-            ->orderBy('day_start', 'DESC')
-            ->take(config('const.new_movie'))
-            ->get();
-        $slides = Slide::where('status', config('const.showing_movie_status'))->get();
+        if (Cache::has('newHome')) {
+            $new = Cache::get('newHome');
+        } else {
+            $new = Movie::where('status', config('const.showing_movie_status'))
+                ->withCount('votes')
+                ->orderBy('day_start', 'DESC')
+                ->take(config('const.new_movie'))
+                ->get();
+            Cache::put('newHome', $new);
+        }
+
+        if (Cache::has('slides')) {
+            $slides = Cache::get('slides');
+        } else {
+            $slides = Slide::where('status', config('const.showing_movie_status'))->with('movie')->get();
+            Cache::put('slides', $slides);
+        }
 
         return view('frontend.homepages.home', compact('best', 'new', 'slides'));
     }

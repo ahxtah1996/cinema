@@ -58,6 +58,11 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <div class="col-sm-12">
+                            <ul class="list-group hideClass"></ul>
+                        </div>
+                    </div>  
+                    <div class="form-group takeTime">
                         <label for="timestart" class="col-sm-4 control-label">{{ __('label.timestart') }}</label>
                         <div class="row col-sm-12">
                             <div class="col-sm-6">
@@ -94,6 +99,31 @@
 @stop
 @push('scripts')
 <script type="text/javascript">
+    $('#movie_id').on('change', function() {
+        var a = this.value;
+        $('#room_id').on('change', function() {
+            var b = this.value;
+            if (a > 0 && b > 0) {
+                var string = a + '-' + b;
+                $.get("{{ route('room.index') }}" + '/' + string, function (data) {
+                    $('.list-group').show();
+                    var html = `<li class="list-group-item active">Empty time for three days with ` + data.time + ` min</li>`;
+                    delete data.time;
+                    if (jQuery.isEmptyObject(data)) {
+                        html += `<li class="list-group-item">Not empty</li>`
+                        $('.takeTime').hide();
+                    } else {
+                        $.each(data, function (key, value) {
+                            html += `<li class="list-group-item">` + value + `</li>`
+                        })
+                        $('.takeTime').show();
+                    }
+
+                    $('.list-group').html(html);
+                })
+            }
+        });
+    });
     $(function () {
         $.ajaxSetup({
             headers: {
@@ -126,6 +156,8 @@
         var showtime_id = $(this).data('id');
         $.get("{{ route('showtime.index') }}" + '/' + showtime_id + '/edit', function (data) {
             $('#modelHeading').html("{{ __('label.editShowtime') }}");
+            $('.list-group').hide();
+            $('.takeTime').show();
             $('#cinema').val(data.room.cinema.id);
             var room_id = data.room.id;
             $.get("{{ route('seat.index') }}" + '/' + data.room.cinema.id, function (data) {

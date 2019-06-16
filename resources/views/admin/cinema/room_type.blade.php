@@ -82,7 +82,7 @@
     $('body').on('click', '.editRoomType', function () {
         var room_type_id = $(this).data('id');
         $.get("{{ route('room_type.index') }}" + '/' + room_type_id + '/edit', function (data) {
-            $('#modelHeading').html("{{ __('label.editCinema') }}");
+            $('#modelHeading').html("{{ __('label.editRoomType') }}");
             $('#saveBtn').val("edit-room_type");
             $('#ajaxModel').modal('show');
             $('#room_type_id').val(data.id);

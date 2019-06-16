@@ -3,20 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 
 use App\Models\Room;
-
 use App\Models\Room_type;
-
 use App\Models\Cinema;
+use App\Models\Showtime;
+use App\Models\Movie;
 
 use Yajra\Datatables\Datatables;
-
 use Illuminate\Support\Facades\Validator;
-
 use App\Http\Requests\RoomRequest;
+use Carbon\Carbon;
 
 class RoomController extends Controller
 {
@@ -87,7 +85,31 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        //
+        $ex = explode('-', $id);
+        $time = Movie::findOrFail($ex[0])->time;
+        $now = Carbon::now();
+        $twoDay = Carbon::now()->addDays(3)->addUnitNoOverflow('hour', 24, 'day');
+        $st = Showtime::where('room_id', $ex[1])
+            ->where('timestart', '>', $now)
+            ->where('timestart', '<', $twoDay)
+            ->orderBy('timestart')
+            ->get();
+        $arr = [];
+        $result = [];
+        $result['time'] = $time;
+        $a = Carbon::now();
+        $b = 1000;
+        foreach ($st as $key => $value) {
+            $l = Carbon::parse($value->timestart);
+            $m = Carbon::parse($a)->addMinutes($b);
+            $n = Carbon::parse($a)->addMinutes($b)->addMinutes($time);
+            $a = $value->timestart;
+            $b = $value->movie->time;
+            if ($l > $n) 
+                $result[$key] = $m . ' => ' . $l;
+        }
+
+        return response()->json($result);
     }
 
     /**
