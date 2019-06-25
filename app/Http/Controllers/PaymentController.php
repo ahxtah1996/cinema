@@ -79,8 +79,7 @@ class PaymentController extends Controller
             $seat = Seat_col::whereId($seatId)
                 ->with(['seatRow.seatType.seatPrices' => $seatFilter])
                 ->whereHas('seatRow.seatType.seatPrices', $seatFilter)
-                ->get();
-            dd($seat);
+                ->first();
 
             $tong += $seat['seatRow']['seatType']['seatPrices'][0]['price'];
         }
