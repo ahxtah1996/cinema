@@ -80,6 +80,7 @@ class PaymentController extends Controller
                 ->whereHas('seatRow.seatType.seatPrices', $seatFilter)
                 ->first();
             dd($seat);
+            
             $tong += $seat['seatRow']['seatType']['seatPrices'][0]['price'];
         }
 
