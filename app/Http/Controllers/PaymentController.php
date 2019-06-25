@@ -70,6 +70,7 @@ class PaymentController extends Controller
     private function getAllSeatPrice($arrId)
     {
         $tong = 0;
+        dd($arrId);
         foreach ($arrId as $seatId) {
             $roomTypeId = Seat_col::findOrFail($seatId)->seatRow->room->room_type_id;
             $seatFilter = function ($query) use ($roomTypeId) {
@@ -80,7 +81,7 @@ class PaymentController extends Controller
                 ->whereHas('seatRow.seatType.seatPrices', $seatFilter)
                 ->first();
             dd($seat);
-            
+
             $tong += $seat['seatRow']['seatType']['seatPrices'][0]['price'];
         }
 
