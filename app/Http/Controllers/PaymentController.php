@@ -81,7 +81,7 @@ class PaymentController extends Controller
                 ->whereHas('seatRow.seatType.seatPrices', $seatFilter)
                 ->first();
 
-            $tong += $seat['seatRow']['seatType']['seatPrices'][0]['price'];
+            $tong += $seat->seatRow->seatType->seatPrices[0]->price;
         }
 
         return $tong;
