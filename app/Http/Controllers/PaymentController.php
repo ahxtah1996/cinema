@@ -76,7 +76,7 @@ class PaymentController extends Controller
                 $query->where('room_type_id', $roomTypeId);
             };
 
-            $seat = Seat_col::whereId($seatId);
+            $seat = Seat_col::whereId($seatId)->get();
                 // ->with(['seatRow.seatType.seatPrices' => $seatFilter])
                 // ->whereHas('seatRow.seatType.seatPrices', $seatFilter)
                 // ->first();
