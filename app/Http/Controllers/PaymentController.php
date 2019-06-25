@@ -72,10 +72,10 @@ class PaymentController extends Controller
         $tong = 0;
         foreach ($arrId as $seatId) {
             $roomTypeId = Seat_col::findOrFail($seatId)->seatRow->room->room_type_id;
-            dd($roomTypeId);
             $seatFilter = function ($query) use ($roomTypeId) {
                 $query->where('room_type_id', $roomTypeId);
             };
+            dd($seatFilter);
             $seat = Seat_col::whereId($seatId)
                 ->with(['seatRow.seatType.seatPrices' => $seatFilter])
                 ->whereHas('seatRow.seatType.seatPrices', $seatFilter)
